@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos — Ferretería Super Jimmy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── VARIABLES LOCALES ─────────────────────────────────── */
+    :root {
+      --rojo: #ea0404;
+      --negro-dark: #1a1a1a;
+      --sombra-hover: 0 14px 36px rgba(234,4,4,0.14);
+      --radio: 12px;
+      --transicion: all .22s ease;
+    }
+
+    /* ── HERO ──────────────────────────────────────────────── */
+    .productos-hero {
+      background: #1a1a1a;
+      padding: 54px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .productos-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(234,4,4,.32) 0%, transparent 60%);
+    }
+    .productos-hero::after {
+      content: '';
+      position: absolute;
+      right: -60px; top: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(234,4,4,.15) 0%, transparent 70%);
+    }
+    .productos-hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px;
+      color: #fff;
+      letter-spacing: 3px;
+      position: relative;
+      z-index: 1;
+      line-height: 1;
+    }
+    .productos-hero h1 em { color: var(--rojo); font-style: normal; }
+    .productos-hero p {
+      color: #bbb;
+      font-size: 15px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
+    }
+
+    /* ── BARRA DE BÚSQUEDA ─────────────────────────────────── */
+    .search-bar-wrap {
+      background: #fff;
+      border-bottom: 2px solid #e8e8e8;
+      padding: 16px 80px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 64px;
+      z-index: 90;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .search-input-wrap {
+      flex: 1;
+      max-width: 520px;
+      position: relative;
+    }
+    .search-input-wrap .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: #bbb;
+      pointer-events: none;
+    }
+    .search-input-wrap input {
+      width: 100%;
+      padding: 10px 14px 10px 40px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      outline: none;
+      transition: var(--transicion);
+    }
+    .search-input-wrap input:focus {
+      border-color: var(--rojo);
+      box-shadow: 0 0 0 3px rgba(234,4,4,.08);
+    }
+    .search-info {
+      font-size: 13px;
+      color: #999;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── LAYOUT ────────────────────────────────────────────── */
+    .productos-layout {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 80vh;
+    }
+
+    /* ── SIDEBAR CATEGORÍAS ────────────────────────────────── */
+    .cat-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      padding: 28px 16px;
+      border-right: 2px solid #eee;
+      position: sticky;
+      top: 120px;
+      align-self: flex-start;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+      background: #fafafa;
+    }
+    .cat-sidebar::-webkit-scrollbar { width: 4px; }
+    .cat-sidebar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+    .cat-sidebar h4 {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: #aaa;
+      margin-bottom: 14px;
+      padding-left: 10px;
+    }
+    .cat-sidebar ul { list-style: none; }
+    .cat-sidebar li { margin-bottom: 3px; }
+    .cat-sidebar li a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #555;
+      transition: var(--transicion);
+      border: 2px solid transparent;
+    }
+    .cat-sidebar li a:hover {
+      background: rgba(234,4,4,.07);
+      color: var(--rojo);
+      border-color: rgba(234,4,4,.15);
+    }
+    .cat-sidebar li a.active {
+      background: rgba(234,4,4,.1);
+      color: var(--rojo);
+      border-color: rgba(234,4,4,.22);
+    }
+    .cat-label { display: flex; align-items: center; gap: 8px; }
+    .cat-cnt {
+      font-size: 11px;
+      font-weight: 800;
+      background: #ebebeb;
+      color: #888;
+      padding: 2px 8px;
+      border-radius: 20px;
+      min-width: 30px;
+      text-align: center;
+      transition: var(--transicion);
+    }
+    .cat-sidebar li a.active .cat-cnt,
+    .cat-sidebar li a:hover .cat-cnt {
+      background: rgba(234,4,4,.15);
+      color: var(--rojo);
+    }
+
+    /* ── CONTENIDO PRINCIPAL ───────────────────────────────── */
+    .productos-content {
+      flex: 1;
+      padding: 32px 36px;
+      min-width: 0;
+    }
+
+    /* Topbar */
+    .prod-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid #eee;
+    }
+    .prod-topbar-left h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      letter-spacing: 1.5px;
+      color: #1a1a1a;
+      line-height: 1;
+    }
+    .prod-count {
+      font-size: 13px;
+      color: #999;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+    .sort-wrap { display: flex; align-items: center; gap: 8px; }
+    .sort-wrap label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sort-wrap select {
+      padding: 7px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      outline: none;
+      cursor: pointer;
+      transition: var(--transicion);
+      background: #fff;
+    }
+    .sort-wrap select:focus { border-color: var(--rojo); }
+
+    /* ── GRID PRODUCTOS ────────────────────────────────────── */
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .prod-card {
+      background: #fff;
+      border: 2px solid #e8e8e8;
+      border-radius: var(--radio);
+      overflow: hidden;
+      transition: var(--transicion);
+      cursor: default;
+      display: flex;
+      flex-direction: column;
+    }
+    .prod-card:hover {
+      border-color: var(--rojo);
+      transform: translateY(-5px);
+      box-shadow: var(--sombra-hover);
+    }
+
+    .prod-img {
+      height: 148px;
+      background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      position: relative;
+    }
+    .prod-badge-ref {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      background: rgba(0,0,0,.5);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .prod-body {
+      padding: 13px 14px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .prod-cat {
+      font-size: 10px;
+      color: var(--rojo);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 4px;
+    }
+    .prod-nombre {
+      font-size: 13px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1.35;
+      flex: 1;
+    }
+    .prod-precios {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .prod-precio-nuevo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--rojo);
+      letter-spacing: .5px;
+    }
+
+    /* ── PAGINACIÓN ────────────────────────────────────────── */
+    .paginacion {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid #eee;
+      flex-wrap: wrap;
+    }
+    .paginacion button {
+      padding: 7px 13px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      background: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #555;
+      cursor: pointer;
+      transition: var(--transicion);
+    }
+    .paginacion button:hover:not(:disabled) {
+      border-color: var(--rojo);
+      color: var(--rojo);
+    }
+    .paginacion button.activa {
+      background: var(--rojo);
+      border-color: var(--rojo);
+      color: #fff;
+    }
+    .paginacion button:disabled { opacity: .32; cursor: default; }
+    .pag-ellipsis { font-size: 13px; color: #bbb; padding: 0 4px; }
+
+    /* ── ESTADOS ───────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: #bbb;
+      grid-column: 1 / -1;
+    }
+    .empty-state span { font-size: 54px; display: block; margin-bottom: 14px; }
+    .empty-state p { font-size: 15px; font-weight: 700; }
+
+    .spinner-wrap { text-align: center; padding: 80px; grid-column: 1/-1; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #eee;
+      border-top-color: var(--rojo);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .productos-hero { padding: 36px 24px; }
+      .productos-hero h1 { font-size: 40px; }
+      .search-bar-wrap { padding: 14px 20px; }
+      .cat-sidebar { width: 200px; padding: 20px 10px; }
+      .productos-content { padding: 24px 18px; }
+    }
+    @media (max-width: 680px) {
+      .productos-layout { flex-direction: column; }
+      .cat-sidebar {
+        width: 100%; height: auto; position: static;
+        border-right: none; border-bottom: 2px solid #eee;
+        padding: 14px 16px;
+      }
+      .cat-sidebar ul { display: flex; flex-wrap: wrap; gap: 6px; }
+      .cat-sidebar li { margin-bottom: 0; }
+      .productos-content { padding: 18px 14px; }
+      .productos-grid { grid-template-columns: repeat(auto-fill, minmax(155px,1fr)); gap: 12px; }
+      .search-bar-wrap { flex-wrap: wrap; padding: 12px 16px; top: 56px; }
+      .search-input-wrap { max-width: 100%; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <img class="logo" src="Captura de pantalla 2026-05-15 121012.png" alt="Super Jimmy">
+  <ul class="nav-links">
+    <li><a href="index.html#categorias">Productos</a></li>
+    <li><a href="index.html#ofertas">Ofertas</a></li>
+    <li><a href="index.html#servicios">Servicios</a></li>
+    <li><a href="index.html#consejos">Consejos</a></li>
+    <li><a href="vacantes.html">Vacantes</a></li>
+    <li><a href="index.html#ayuda">Ayuda</a></li>
+    <li><a href="index.html#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="productos-hero">
+  <h1>CATÁLOGO DE <em>PRODUCTOS</em></h1>
+  <p>Explora nuestro inventario completo por categoría</p>
+</div>
+
+<!-- BARRA DE BÚSQUEDA -->
+<div class="search-bar-wrap">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="buscador" placeholder="Buscar por nombre o referencia…" oninput="onBuscar()" onkeydown="verificarAccesoAdmin(event)">
+  </div>
+  <span class="search-info" id="search-info"></span>
+</div>
+
+<!-- CONTENIDO -->
+<div class="productos-layout">
+  <!-- Sidebar categorías -->
+  <aside class="cat-sidebar">
+    <h4>Categorías</h4>
+    <ul id="cat-list"></ul>
+  </aside>
+
+  <!-- Grid + paginación -->
+  <section class="productos-content">
+    <div class="prod-topbar">
+      <div class="prod-topbar-left">
+        <h3 id="cat-titulo">Todos los Productos</h3>
+        <div class="prod-count" id="prod-count">Cargando…</div>
+      </div>
+      <div class="sort-wrap">
+        <label>Ordenar</label>
+        <select id="sort-sel" onchange="renderPage()">
+          <option value="az">A → Z</option>
+          <option value="za">Z → A</option>
+          <option value="menor">Menor precio</option>
+          <option value="mayor">Mayor precio</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="productos-grid" id="productos-grid">
+      <div class="spinner-wrap"><div class="spinner"></div><p>Cargando productos…</p></div>
+    </div>
+
+    <div class="paginacion" id="paginacion"></div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo-text">SUPER <span style="color:var(--rojo)">JIMMY</span></span>
+      <p>Tu ferretería de confianza.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <a href="index.html">Inicio</a>
+      <a href="#">Productos</a>
+      <a href="vacantes.html">Vacantes</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ferretería Super Jimmy. Todos los derechos reservados.</span>
+    <span>Diseño: Estudiantes Politecnico Madre Rafaela Ybarra</span>
+  </div>
+</footer>
+
+<!-- PANEL ADMIN -->
+<div id="admin-dashboard" style="display:none;">
+<style>
+#admin-dashboard{position:fixed;inset:0;background:#f4f5f7;z-index:1000;overflow-y:auto;font-family:'Nunito',sans-serif;}
+.adm-top{background:#1a1a1a;padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.adm-top h1{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:2px;}
+.adm-top h1 span{color:#ea0404;}
+.adm-top-actions{display:flex;align-items:center;gap:12px;}
+.adm-btn{padding:8px 18px;border-radius:7px;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .18s;}
+.adm-btn-red{background:#ea0404;color:#fff;}.adm-btn-red:hover{background:#c50000;}
+.adm-btn-outline{background:transparent;border:2px solid #555;color:#ccc;}.adm-btn-outline:hover{border-color:#ea0404;color:#fff;}
+.adm-btn-green{background:#16a34a;color:#fff;}.adm-btn-green:hover{background:#138f40;}
+.adm-btn-gray{background:#e5e7eb;color:#333;}.adm-btn-gray:hover{background:#d1d5db;}
+.adm-body{padding:28px 32px;max-width:1400px;margin:0 auto;}
+.adm-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
+.adm-stat{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #e5e7eb;}
+.adm-stat .stat-num{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#ea0404;line-height:1;}
+.adm-stat .stat-lbl{font-size:11px;font-weight:800;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+.adm-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.adm-search{flex:1;min-width:200px;padding:9px 14px;border:2px solid #e0e0e0;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;outline:none;}
+.adm-search:focus{border-color:#ea0404;}
+.adm-cat-sel{padding:9px 14px;border:2px solid #e0e0e0;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;background:#fff;outline:none;cursor:pointer;}
+.adm-cat-sel:focus{border-color:#ea0404;}
+.adm-table-wrap{background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;}
+.adm-table{width:100%;border-collapse:collapse;font-size:13px;}
+.adm-table thead tr{background:#f9fafb;border-bottom:2px solid #e5e7eb;}
+.adm-table th{padding:11px 12px;text-align:left;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#666;white-space:nowrap;}
+.adm-table td{padding:10px 12px;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle;}
+.adm-table tr:last-child td{border-bottom:none;}
+.adm-table tr:hover td{background:#fafafa;}
+.adm-badge-oferta{background:#fef2f2;color:#ea0404;border:1px solid #fca5a5;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;}
+.adm-badge-cat{background:#eff6ff;color:#2563eb;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+.adm-action-btn{padding:5px 12px;border-radius:5px;border:none;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;margin-right:4px;}
+.edit-btn{background:#eff6ff;color:#2563eb;}.edit-btn:hover{background:#dbeafe;}
+.del-btn{background:#fef2f2;color:#dc2626;}.del-btn:hover{background:#fee2e2;}
+.adm-pagination{display:flex;align-items:center;gap:6px;padding:14px 12px;border-top:1px solid #f0f0f0;flex-wrap:wrap;}
+.adm-pagination button{padding:5px 12px;border:1px solid #e0e0e0;border-radius:5px;background:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.adm-pagination button:hover{border-color:#ea0404;color:#ea0404;}
+.adm-pagination button.adm-pag-activa{background:#ea0404;color:#fff;border-color:#ea0404;}
+.adm-pagination button:disabled{opacity:.4;cursor:default;}
+.adm-pag-info{font-size:12px;color:#888;font-weight:700;margin-left:auto;}
+.adm-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:30px 16px;backdrop-filter:blur(3px);}
+.adm-modal-overlay.open{display:flex;}
+.adm-modal{background:#fff;border-radius:14px;padding:32px;width:100%;max-width:560px;position:relative;margin:auto;animation:slideUp .25s ease;}
+.adm-modal h2{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1.5px;margin-bottom:20px;color:#1a1a1a;}
+.adm-modal h2 span{color:#ea0404;}
+.adm-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.adm-form-full{grid-column:1/-1;}
+.adm-form-group label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:5px;}
+.adm-form-group input,.adm-form-group select,.adm-form-group textarea{width:100%;padding:9px 12px;border:2px solid #e0e0e0;border-radius:7px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:#333;outline:none;transition:border-color .18s;background:#fff;}
+.adm-form-group input:focus,.adm-form-group select:focus,.adm-form-group textarea:focus{border-color:#ea0404;}
+.adm-form-group textarea{resize:vertical;min-height:70px;}
+.adm-oferta-toggle{display:flex;align-items:center;gap:10px;background:#f9fafb;border-radius:8px;padding:12px 14px;border:2px solid #e5e7eb;cursor:pointer;transition:border-color .18s;}
+.adm-oferta-toggle:hover{border-color:#ea0404;}
+.adm-oferta-toggle input[type=checkbox]{width:18px;height:18px;accent-color:#ea0404;cursor:pointer;}
+.adm-oferta-price-row{display:none;}
+.adm-oferta-price-row.visible{display:block;}
+.adm-modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #eee;}
+.adm-modal-close-btn{position:absolute;top:14px;right:16px;background:none;border:none;font-size:24px;color:#aaa;cursor:pointer;line-height:1;transition:color .15s;}
+.adm-modal-close-btn:hover{color:#ea0404;}
+.adm-confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:3000;display:none;align-items:center;justify-content:center;}
+.adm-confirm-overlay.open{display:flex;}
+.adm-confirm-box{background:#fff;border-radius:12px;padding:28px 32px;max-width:360px;width:90%;text-align:center;animation:slideUp .2s ease;}
+.adm-confirm-box h3{font-size:17px;margin-bottom:8px;color:#1a1a1a;font-weight:800;}
+.adm-confirm-box p{font-size:13px;color:#666;margin-bottom:20px;}
+.adm-confirm-actions{display:flex;gap:10px;justify-content:center;}
+</style>
+
+<div class="adm-top">
+  <h1>SUPER <span>JIMMY</span> — ADMIN PRODUCTOS</h1>
+  <div class="adm-top-actions">
+    <button class="adm-btn adm-btn-red" onclick="admNuevoProducto()">+ Nuevo Producto</button>
+    <button class="adm-btn adm-btn-outline" onclick="cerrarAdmin()">&#8592; Volver al catálogo</button>
+  </div>
+</div>
+
+<div class="adm-body">
+  <div class="adm-stats" id="adm-stats"></div>
+  <div class="adm-toolbar">
+    <input class="adm-search" id="adm-search" type="text" placeholder="Buscar por nombre, referencia, marca..." oninput="admFiltrar()">
+    <select class="adm-cat-sel" id="adm-cat-filter" onchange="admFiltrar()">
+      <option value="">Todas las categorías</option>
+      <option value="Pinturas">Pinturas</option>
+      <option value="Plomería">Plomería</option>
+      <option value="Electricidad">Electricidad</option>
+      <option value="Herramientas">Herramientas</option>
+      <option value="Construcción">Construcción</option>
+      <option value="Cerrajería">Cerrajería</option>
+      <option value="Automotriz">Automotriz</option>
+      <option value="Electrodomésticos">Electrodomésticos</option>
+      <option value="General">General</option>
+    </select>
+    <select class="adm-cat-sel" id="adm-oferta-filter" onchange="admFiltrar()">
+      <option value="">Todos</option>
+      <option value="oferta">Solo en oferta</option>
+      <option value="normal">Sin oferta</option>
+    </select>
+  </div>
+  <div class="adm-table-wrap">
+    <table class="adm-table">
+      <thead><tr>
+        <th>#</th><th>Nombre</th><th>Ref.</th><th>Marca</th>
+        <th>Categoría</th><th>Precio</th><th>Oferta</th><th>Acciones</th>
+      </tr></thead>
+      <tbody id="adm-tbody"></tbody>
+    </table>
+    <div class="adm-pagination" id="adm-pagination"></div>
+  </div>
+</div>
+
+<!-- Modal Crear/Editar -->
+<div class="adm-modal-overlay" id="adm-modal-overlay">
+  <div class="adm-modal">
+    <button class="adm-modal-close-btn" onclick="cerrarModalAdm()">&#xD7;</button>
+    <h2 id="adm-modal-titulo">NUEVO <span>PRODUCTO</span></h2>
+    <div class="adm-form-grid">
+      <div class="adm-form-group adm-form-full">
+        <label>Nombre del producto *</label>
+        <input type="text" id="adm-inp-nombre" placeholder="Ej. TORNILLO HEXAGONAL 3/8">
+      </div>
+      <div class="adm-form-group">
+        <label>Referencia / Código</label>
+        <input type="text" id="adm-inp-ref" placeholder="Ej. TH-012">
+      </div>
+      <div class="adm-form-group">
+        <label>Marca</label>
+        <input type="text" id="adm-inp-marca" placeholder="Ej. Truper">
+      </div>
+      <div class="adm-form-group">
+        <label>Categoría *</label>
+        <select id="adm-inp-cat">
+          <option value="General">General</option>
+          <option value="Pinturas">Pinturas</option>
+          <option value="Plomería">Plomería</option>
+          <option value="Electricidad">Electricidad</option>
+          <option value="Herramientas">Herramientas</option>
+          <option value="Construcción">Construcción</option>
+          <option value="Cerrajería">Cerrajería</option>
+          <option value="Automotriz">Automotriz</option>
+          <option value="Electrodomésticos">Electrodomésticos</option>
+        </select>
+      </div>
+      <div class="adm-form-group">
+        <label>Precio regular (RD$) *</label>
+        <input type="number" id="adm-inp-precio" placeholder="0" min="0" step="0.01">
+      </div>
+      <div class="adm-form-group adm-form-full">
+        <label style="margin-bottom:8px;">Estado de oferta</label>
+        <label class="adm-oferta-toggle" for="adm-inp-oferta">
+          <input type="checkbox" id="adm-inp-oferta" onchange="toggleOfertaField()">
+          <span>Este producto está en OFERTA</span>
+        </label>
+      </div>
+      <div class="adm-form-group adm-form-full adm-oferta-price-row" id="adm-oferta-price-row">
+        <label>Precio de oferta (RD$)</label>
+        <input type="number" id="adm-inp-precio-oferta" placeholder="0" min="0" step="0.01">
+      </div>
+      <div class="adm-form-group adm-form-full">
+        <label>Imagen del producto (opcional)</label>
+        <div id="adm-img-preview-wrap" style="margin-bottom:8px;display:none;">
+          <img id="adm-img-preview" src="" alt="Vista previa" style="max-height:120px;border-radius:8px;border:2px solid #e0e0e0;object-fit:contain;background:#f9fafb;padding:4px;">
+          <button type="button" onclick="admQuitarImagen()" style="display:block;margin-top:6px;font-size:11px;font-weight:800;color:#dc2626;background:#fef2f2;border:1px solid #fca5a5;border-radius:5px;padding:3px 10px;cursor:pointer;">Quitar imagen</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:10px;background:#f9fafb;border:2px dashed #e0e0e0;border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color .18s;" id="adm-img-label" for="adm-inp-imagen">
+          <span style="font-size:22px;">🖼️</span>
+          <span style="font-size:13px;font-weight:700;color:#666;" id="adm-img-label-txt">Haz clic para subir una imagen (JPG, PNG, WebP)</span>
+        </label>
+        <input type="file" id="adm-inp-imagen" accept="image/*" style="display:none;" onchange="admPreviewImagen(this)">
+      </div>
+      <div class="adm-form-group adm-form-full">
+        <label>Descripción (opcional)</label>
+        <textarea id="adm-inp-desc" placeholder="Descripción del producto..."></textarea>
+      </div>
+    </div>
+    <div class="adm-modal-footer">
+      <button class="adm-btn adm-btn-gray" onclick="cerrarModalAdm()">Cancelar</button>
+      <button class="adm-btn adm-btn-green" onclick="admGuardarProducto()">Guardar producto</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="adm-confirm-overlay" id="adm-confirm-overlay">
+  <div class="adm-confirm-box">
+    <h3>Eliminar producto</h3>
+    <p id="adm-confirm-nombre">Este producto será eliminado.</p>
+    <div class="adm-confirm-actions">
+      <button class="adm-btn adm-btn-gray" onclick="cerrarConfirm()">Cancelar</button>
+      <button class="adm-btn adm-btn-red" id="adm-confirm-ok">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- fin #admin-dashboard -->
+
+
+<!-- Datos de productos generados desde LISTADO_DE_PRODUCTOS.xlsx -->
+<script src="productos_data.js"></script>
+
+<script>
+const POR_PAGINA = 60;
+
+const CAT_ICONOS = {
+  'Pinturas':          '🎨',
+  'Plomería':          '🚿',
+  'Electricidad':      '⚡',
+  'Herramientas':      '🔧',
+  'Construcción':      '🧱',
+  'Cerrajería':        '🔐',
+  'Automotriz':        '🚗',
+  'Electrodomésticos': '📺',
+  'General':           '📦'
+};
+
+const ORDEN_CATS = ['Pinturas','Plomería','Electricidad','Herramientas','Construcción','Cerrajería','Automotriz','Electrodomésticos','General'];
+
+let PRODUCTOS_ACTIVOS = [];
+let catActual    = 'todos';
+let filtrados    = [];
+let paginaActual = 1;
+
+
+/* ── CARGAR PRODUCTOS DESDE FLASK ───────────────────────────
+   Si el backend está disponible, usa la base de datos administrable.
+   Si no está disponible, usa productos_data.js como respaldo.
+*/
+async function cargarProductosPublicos() {
+  try {
+    const res = await fetch('/api/productos');
+    if (!res.ok) throw new Error('API no disponible');
+    const data = await res.json();
+
+    PRODUCTOS_ACTIVOS = data.map(p => ({
+      id: p.id,
+      nombre: p.nombre || '',
+      ref: p.ref || '',
+      marca: p.marca || '',
+      precio: Number(p.precio || 0),
+      precio_oferta: p.precio_oferta ? Number(p.precio_oferta) : null,
+      en_oferta: !!p.en_oferta,
+      descripcion: p.descripcion || '',
+      categoria: p.categoria || 'General',
+      imagen: p.imagen ? `/uploads_productos/${p.imagen}` : ''
+    }));
+  } catch (e) {
+    PRODUCTOS_ACTIVOS = Array.isArray(window.PRODUCTOS_DATA) ? window.PRODUCTOS_DATA : [];
+  }
+}
+
+/* ── ACCESO ADMIN OCULTO DESDE LA BARRA DE BÚSQUEDA ─────────
+   Escribe la clave en el buscador y presiona ENTER.
+   "jimmy2026" abre el dashboard de administración de productos.
+*/
+async function verificarAccesoAdmin(event) {
+  if (event.key !== 'Enter') return;
+
+  const input = document.getElementById('buscador');
+  const codigo = input.value.trim();
+  if (!codigo) return;
+
+  if (codigo === 'jimmy2026') {
+    input.value = '';
+    abrirAdmin();
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ password: codigo })
+    });
+    if (res.ok) {
+      input.value = '';
+      abrirAdmin();
+    }
+  } catch (e) {
+    console.warn('No fue posible verificar el acceso admin.');
+  }
+}
+
+/* ── INICIALIZACIÓN ─────────────────────────── */
+async function init() {
+  await cargarProductosPublicos();
+  const ul = document.getElementById('cat-list');
+  ul.innerHTML = '';
+
+  // Todos
+  const total = PRODUCTOS_ACTIVOS.length;
+  ul.insertAdjacentHTML('beforeend', `
+    <li><a href="#" data-cat="todos" onclick="selCat('todos');return false;" class="active">
+      <span class="cat-label"><span>🏪</span> Todos</span>
+      <span class="cat-cnt">${total.toLocaleString()}</span>
+    </a></li>`);
+
+  // Cada categoría en orden
+  ORDEN_CATS.forEach(c => {
+    const cnt = PRODUCTOS_ACTIVOS.filter(p => p.categoria === c).length;
+    if (!cnt) return;
+    ul.insertAdjacentHTML('beforeend', `
+      <li><a href="#" data-cat="${c}" onclick="selCat('${c}');return false;">
+        <span class="cat-label"><span>${CAT_ICONOS[c]||'📦'}</span> ${c}</span>
+        <span class="cat-cnt">${cnt.toLocaleString()}</span>
+      </a></li>`);
+  });
+
+  // ?cat= en URL
+  const catParam = new URLSearchParams(location.search).get('cat');
+  if (catParam && ORDEN_CATS.includes(catParam)) {
+    selCat(catParam);
+  } else {
+    selCat('todos');
+  }
+}
+
+/* ── SELECCIONAR CATEGORÍA ──────────────────── */
+function selCat(cat) {
+  catActual    = cat;
+  paginaActual = 1;
+  document.getElementById('buscador').value = '';
+  document.getElementById('search-info').textContent = '';
+
+  document.querySelectorAll('#cat-list a').forEach(a =>
+    a.classList.toggle('active', a.dataset.cat === cat)
+  );
+
+  document.getElementById('cat-titulo').textContent =
+    cat === 'todos' ? 'Todos los Productos' : cat;
+
+  filtrados = cat === 'todos'
+    ? [...PRODUCTOS_ACTIVOS]
+    : PRODUCTOS_ACTIVOS.filter(p => p.categoria === cat);
+
+  renderPage();
+}
+
+/* ── BÚSQUEDA ───────────────────────────────── */
+function onBuscar() {
+  const q = document.getElementById('buscador').value.trim().toLowerCase();
+  paginaActual = 1;
+  const base = catActual === 'todos'
+    ? PRODUCTOS_ACTIVOS
+    : PRODUCTOS_ACTIVOS.filter(p => p.categoria === catActual);
+
+  if (!q) {
+    filtrados = [...base];
+    document.getElementById('search-info').textContent = '';
+  } else {
+    filtrados = base.filter(p =>
+      (p.nombre || '').toLowerCase().includes(q) || (p.ref || '').toLowerCase().includes(q) || (p.marca || '').toLowerCase().includes(q)
+    );
+    document.getElementById('search-info').textContent =
+      filtrados.length === 0
+        ? 'Sin resultados'
+        : `${filtrados.length.toLocaleString()} resultado${filtrados.length !== 1 ? 's' : ''}`;
+  }
+  renderPage();
+}
+
+/* ── ORDENAR ────────────────────────────────── */
+function ordenar() {
+  const sel = document.getElementById('sort-sel').value;
+  filtrados.sort((a, b) => {
+    if (sel === 'az')    return a.nombre.localeCompare(b.nombre);
+    if (sel === 'za')    return b.nombre.localeCompare(a.nombre);
+    if (sel === 'menor') return a.precio - b.precio;
+    if (sel === 'mayor') return b.precio - a.precio;
+    return 0;
+  });
+}
+
+/* ── RENDERIZAR PÁGINA ──────────────────────── */
+function renderPage() {
+  ordenar();
+
+  const total     = filtrados.length;
+  const totalPags = Math.max(1, Math.ceil(total / POR_PAGINA));
+  if (paginaActual > totalPags) paginaActual = 1;
+
+  const ini  = (paginaActual - 1) * POR_PAGINA;
+  const fin  = Math.min(ini + POR_PAGINA, total);
+  const page = filtrados.slice(ini, fin);
+
+  document.getElementById('prod-count').textContent =
+    total === 0
+      ? '0 productos'
+      : `${total.toLocaleString()} producto${total !== 1 ? 's' : ''} · mostrando ${(ini+1).toLocaleString()}–${fin.toLocaleString()}`;
+
+  const grid = document.getElementById('productos-grid');
+
+  if (!page.length) {
+    grid.innerHTML = `<div class="empty-state"><span>🔍</span><p>No hay productos en esta categoría.</p></div>`;
+    document.getElementById('paginacion').innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = page.map(p => {
+    const icono = CAT_ICONOS[p.categoria] || '📦';
+    const precioMostrar = p.en_oferta && p.precio_oferta ? p.precio_oferta : p.precio;
+    const imgHtml = p.imagen
+      ? `<img src="${p.imagen}" alt="${p.nombre}" style="width:100%;height:100%;object-fit:cover;">`
+      : icono;
+    return `<div class="prod-card">
+      <div class="prod-img">
+        ${imgHtml}
+        ${p.ref ? `<span class="prod-badge-ref">${p.ref}</span>` : ''}
+        ${p.en_oferta ? `<span class="prod-badge-ref" style="left:8px;right:auto;background:#ea0404">OFERTA</span>` : ''}
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">${p.categoria}</div>
+        <div class="prod-nombre">${p.nombre}</div>
+        ${p.marca ? `<div style="font-size:11px;color:#777;margin-top:4px;font-weight:700">${p.marca}</div>` : ''}
+        <div class="prod-precios">
+          <span class="prod-precio-nuevo">RD$${precioMostrar.toLocaleString()}</span>
+          ${p.en_oferta && p.precio_oferta ? `<span style="font-size:12px;color:#999;text-decoration:line-through">RD$${p.precio.toLocaleString()}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderPaginacion(totalPags);
+}
+
+/* ── PAGINACIÓN ─────────────────────────────── */
+function renderPaginacion(totalPags) {
+  const pag = document.getElementById('paginacion');
+  if (totalPags <= 1) { pag.innerHTML = ''; return; }
+
+  const range = new Set([1, totalPags]);
+  for (let i = Math.max(2, paginaActual - 2); i <= Math.min(totalPags - 1, paginaActual + 2); i++) range.add(i);
+  const sorted = [...range].sort((a,b) => a-b);
+
+  let html = `<button onclick="irPag(${paginaActual-1})" ${paginaActual===1?'disabled':''}>‹ Anterior</button>`;
+  let prev = 0;
+  sorted.forEach(p => {
+    if (p - prev > 1) html += `<span class="pag-ellipsis">…</span>`;
+    html += `<button class="${p === paginaActual ? 'activa' : ''}" onclick="irPag(${p})">${p}</button>`;
+    prev = p;
+  });
+  html += `<button onclick="irPag(${paginaActual+1})" ${paginaActual===totalPags?'disabled':''}>Siguiente ›</button>`;
+  pag.innerHTML = html;
+}
+
+function irPag(n) {
+  const totalPags = Math.ceil(filtrados.length / POR_PAGINA);
+  if (n < 1 || n > totalPags) return;
+  paginaActual = n;
+  renderPage();
+  window.scrollTo({ top: document.querySelector('.productos-content').offsetTop - 130, behavior: 'smooth' });
+}
+
+/* ── ARRANCAR ───────────────────────────────── */
+init();
+
+/* ════════════════════════════════════════════════════
+   ADMIN DASHBOARD — CRUD completo en memoria
+   ════════════════════════════════════════════════════ */
+const ADM_POR_PAG = 50;
+let admProductos   = [];   // copia editable
+let admFiltrados   = [];
+let admPagina      = 1;
+let admEditandoId  = null;
+
+function abrirAdmin() {
+  // Copia editable de los productos activos
+  admProductos = PRODUCTOS_ACTIVOS.map(p => ({ ...p }));
+  document.getElementById('admin-dashboard').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  admFiltrar();
+  admRenderStats();
+}
+
+function cerrarAdmin() {
+  document.getElementById('admin-dashboard').style.display = 'none';
+  document.body.style.overflow = '';
+  // Sincronizar cambios al catálogo público
+  PRODUCTOS_ACTIVOS = admProductos.map(p => ({ ...p }));
+  selCat(catActual);
+}
+
+function admRenderStats() {
+  const cats = {};
+  admProductos.forEach(p => { cats[p.categoria] = (cats[p.categoria] || 0) + 1; });
+  const ofertas = admProductos.filter(p => p.en_oferta).length;
+  let html = `<div class="adm-stat"><div class="stat-num">${admProductos.length.toLocaleString()}</div><div class="stat-lbl">Total productos</div></div>`;
+  html += `<div class="adm-stat"><div class="stat-num">${ofertas}</div><div class="stat-lbl">En oferta</div></div>`;
+  const CAT_ICONS2 = {Pinturas:'🎨',Plomería:'🚿',Electricidad:'⚡',Herramientas:'🔧',Construcción:'🧱',Cerrajería:'🔐',Automotriz:'🚗',Electrodomésticos:'📺',General:'📦'};
+  ['Pinturas','Plomería','Electricidad','Herramientas','Construcción','Cerrajería','Automotriz','Electrodomésticos','General'].forEach(c => {
+    if (cats[c]) html += `<div class="adm-stat"><div class="stat-num">${cats[c].toLocaleString()}</div><div class="stat-lbl">${CAT_ICONS2[c]} ${c}</div></div>`;
+  });
+  document.getElementById('adm-stats').innerHTML = html;
+}
+
+function admFiltrar() {
+  const q = (document.getElementById('adm-search').value || '').trim().toLowerCase();
+  const cat = document.getElementById('adm-cat-filter').value;
+  const ofertaFil = document.getElementById('adm-oferta-filter').value;
+
+  admFiltrados = admProductos.filter(p => {
+    const matchQ = !q || (p.nombre||'').toLowerCase().includes(q) ||
+                         (p.ref||'').toLowerCase().includes(q) ||
+                         (p.marca||'').toLowerCase().includes(q);
+    const matchCat = !cat || p.categoria === cat;
+    const matchOf = !ofertaFil || (ofertaFil === 'oferta' ? p.en_oferta : !p.en_oferta);
+    return matchQ && matchCat && matchOf;
+  });
+
+  admPagina = 1;
+  admRenderTabla();
+}
+
+function admRenderTabla() {
+  const total = admFiltrados.length;
+  const totalPags = Math.max(1, Math.ceil(total / ADM_POR_PAG));
+  if (admPagina > totalPags) admPagina = 1;
+  const ini = (admPagina - 1) * ADM_POR_PAG;
+  const fin = Math.min(ini + ADM_POR_PAG, total);
+  const page = admFiltrados.slice(ini, fin);
+
+  const CAT_ICONS2 = {Pinturas:'🎨',Plomería:'🚿',Electricidad:'⚡',Herramientas:'🔧',Construcción:'🧱',Cerrajería:'🔐',Automotriz:'🚗',Electrodomésticos:'📺',General:'📦'};
+
+  const tbody = document.getElementById('adm-tbody');
+  if (!page.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:#aaa;font-weight:700;">Sin resultados</td></tr>`;
+  } else {
+    tbody.innerHTML = page.map((p, i) => {
+      const pOferta = p.en_oferta && p.precio_oferta ? p.precio_oferta : p.precio;
+      return `<tr>
+        <td style="color:#bbb;font-size:11px;">${ini + i + 1}</td>
+        <td style="font-weight:700;max-width:280px;word-break:break-word;">${p.nombre}</td>
+        <td style="color:#888;font-size:12px;">${p.ref || '—'}</td>
+        <td style="font-size:12px;">${p.marca || '—'}</td>
+        <td><span class="adm-badge-cat">${CAT_ICONS2[p.categoria]||'📦'} ${p.categoria}</span></td>
+        <td style="font-weight:800;">${p.en_oferta && p.precio_oferta
+          ? `<span style="text-decoration:line-through;color:#bbb;font-size:11px;font-weight:600;">RD$${p.precio.toLocaleString()}</span><br><span style="color:#ea0404;">RD$${p.precio_oferta.toLocaleString()}</span>`
+          : `RD$${p.precio.toLocaleString()}`}</td>
+        <td>${p.en_oferta ? '<span class="adm-badge-oferta">OFERTA</span>' : '<span style="color:#bbb;font-size:11px;">—</span>'}</td>
+        <td>
+          <button class="adm-action-btn edit-btn" onclick="admEditar(${p.id})">Editar</button>
+          <button class="adm-action-btn del-btn" onclick="admConfirmarEliminar(${p.id})">Eliminar</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Paginación
+  const pag = document.getElementById('adm-pagination');
+  if (totalPags <= 1) { pag.innerHTML = `<span class="adm-pag-info">${total.toLocaleString()} producto${total !== 1 ? 's' : ''}</span>`; return; }
+  const range = new Set([1, totalPags]);
+  for (let i = Math.max(2, admPagina - 2); i <= Math.min(totalPags - 1, admPagina + 2); i++) range.add(i);
+  const sorted = [...range].sort((a,b) => a-b);
+  let html = `<button onclick="admIrPag(${admPagina-1})" ${admPagina===1?'disabled':''}>‹</button>`;
+  let prev = 0;
+  sorted.forEach(p => {
+    if (p - prev > 1) html += `<span style="color:#bbb;padding:0 4px;">…</span>`;
+    html += `<button class="${p === admPagina ? 'adm-pag-activa' : ''}" onclick="admIrPag(${p})">${p}</button>`;
+    prev = p;
+  });
+  html += `<button onclick="admIrPag(${admPagina+1})" ${admPagina===totalPags?'disabled':''}>›</button>`;
+  html += `<span class="adm-pag-info">${total.toLocaleString()} productos · pág. ${admPagina}/${totalPags}</span>`;
+  pag.innerHTML = html;
+}
+
+function admIrPag(n) {
+  const totalPags = Math.ceil(admFiltrados.length / ADM_POR_PAG);
+  if (n < 1 || n > totalPags) return;
+  admPagina = n;
+  admRenderTabla();
+  document.querySelector('.adm-table-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+let admImagenBase64 = null;
+
+function admPreviewImagen(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    admImagenBase64 = e.target.result;
+    document.getElementById('adm-img-preview').src = admImagenBase64;
+    document.getElementById('adm-img-preview-wrap').style.display = 'block';
+    document.getElementById('adm-img-label-txt').textContent = file.name;
+    document.getElementById('adm-img-label').style.borderColor = '#ea0404';
+  };
+  reader.readAsDataURL(file);
+}
+
+function admQuitarImagen() {
+  admImagenBase64 = null;
+  document.getElementById('adm-inp-imagen').value = '';
+  document.getElementById('adm-img-preview-wrap').style.display = 'none';
+  document.getElementById('adm-img-label-txt').textContent = 'Haz clic para subir una imagen (JPG, PNG, WebP)';
+  document.getElementById('adm-img-label').style.borderColor = '#e0e0e0';
+}
+
+/* ── CREAR ── */
+function admNuevoProducto() {
+  admEditandoId = null;
+  admImagenBase64 = null;
+  document.getElementById('adm-modal-titulo').innerHTML = 'NUEVO <span>PRODUCTO</span>';
+  document.getElementById('adm-inp-nombre').value = '';
+  document.getElementById('adm-inp-ref').value = '';
+  document.getElementById('adm-inp-marca').value = '';
+  document.getElementById('adm-inp-cat').value = 'General';
+  document.getElementById('adm-inp-precio').value = '';
+  document.getElementById('adm-inp-oferta').checked = false;
+  document.getElementById('adm-inp-precio-oferta').value = '';
+  document.getElementById('adm-inp-desc').value = '';
+  document.getElementById('adm-oferta-price-row').classList.remove('visible');
+  admQuitarImagen();
+  document.getElementById('adm-modal-overlay').classList.add('open');
+}
+
+/* ── EDITAR ── */
+function admEditar(id) {
+  const p = admProductos.find(x => x.id === id);
+  if (!p) return;
+  admEditandoId = id;
+  admImagenBase64 = p.imagen || null;
+  document.getElementById('adm-modal-titulo').innerHTML = 'EDITAR <span>PRODUCTO</span>';
+  document.getElementById('adm-inp-nombre').value = p.nombre;
+  document.getElementById('adm-inp-ref').value = p.ref || '';
+  document.getElementById('adm-inp-marca').value = p.marca || '';
+  document.getElementById('adm-inp-cat').value = p.categoria;
+  document.getElementById('adm-inp-precio').value = p.precio;
+  document.getElementById('adm-inp-oferta').checked = !!p.en_oferta;
+  document.getElementById('adm-inp-precio-oferta').value = p.precio_oferta || '';
+  document.getElementById('adm-inp-desc').value = p.descripcion || '';
+  document.getElementById('adm-oferta-price-row').classList.toggle('visible', !!p.en_oferta);
+  // Image preview
+  if (p.imagen) {
+    document.getElementById('adm-img-preview').src = p.imagen;
+    document.getElementById('adm-img-preview-wrap').style.display = 'block';
+    document.getElementById('adm-img-label-txt').textContent = 'Imagen cargada — haz clic para cambiarla';
+    document.getElementById('adm-img-label').style.borderColor = '#ea0404';
+  } else {
+    admQuitarImagen();
+  }
+  document.getElementById('adm-modal-overlay').classList.add('open');
+}
+
+function toggleOfertaField() {
+  const checked = document.getElementById('adm-inp-oferta').checked;
+  document.getElementById('adm-oferta-price-row').classList.toggle('visible', checked);
+}
+
+/* ── GUARDAR ── */
+function admGuardarProducto() {
+  const nombre = document.getElementById('adm-inp-nombre').value.trim();
+  const precio = parseFloat(document.getElementById('adm-inp-precio').value) || 0;
+  if (!nombre) { alert('El nombre del producto es obligatorio.'); return; }
+
+  const enOferta = document.getElementById('adm-inp-oferta').checked;
+  const precioOferta = enOferta ? (parseFloat(document.getElementById('adm-inp-precio-oferta').value) || null) : null;
+
+  if (admEditandoId !== null) {
+    const idx = admProductos.findIndex(x => x.id === admEditandoId);
+    if (idx > -1) {
+      admProductos[idx] = {
+        ...admProductos[idx],
+        nombre,
+        ref: document.getElementById('adm-inp-ref').value.trim(),
+        marca: document.getElementById('adm-inp-marca').value.trim(),
+        categoria: document.getElementById('adm-inp-cat').value,
+        precio,
+        en_oferta: enOferta,
+        precio_oferta: precioOferta,
+        descripcion: document.getElementById('adm-inp-desc').value.trim(),
+        imagen: admImagenBase64 || admProductos[idx].imagen || ''
+      };
+    }
+  } else {
+    const newId = admProductos.length ? Math.max(...admProductos.map(x => x.id)) + 1 : 1;
+    admProductos.push({
+      id: newId,
+      nombre,
+      ref: document.getElementById('adm-inp-ref').value.trim(),
+      marca: document.getElementById('adm-inp-marca').value.trim(),
+      categoria: document.getElementById('adm-inp-cat').value,
+      precio,
+      en_oferta: enOferta,
+      precio_oferta: precioOferta,
+      descripcion: document.getElementById('adm-inp-desc').value.trim(),
+      imagen: admImagenBase64 || ''
+    });
+  }
+
+  cerrarModalAdm();
+  admFiltrar();
+  admRenderStats();
+}
+
+/* ── ELIMINAR ── */
+function admConfirmarEliminar(id) {
+  const p = admProductos.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('adm-confirm-nombre').textContent = `"${p.nombre}"`;
+  const btn = document.getElementById('adm-confirm-ok');
+  btn.onclick = () => { admEliminar(id); cerrarConfirm(); };
+  document.getElementById('adm-confirm-overlay').classList.add('open');
+}
+
+function admEliminar(id) {
+  admProductos = admProductos.filter(x => x.id !== id);
+  admFiltrar();
+  admRenderStats();
+}
+
+function cerrarConfirm() {
+  document.getElementById('adm-confirm-overlay').classList.remove('open');
+}
+
+function cerrarModalAdm() {
+  document.getElementById('adm-modal-overlay').classList.remove('open');
+}
+
+/* ── ARRANCAR ───────────────────────────────── */
+init();
+</script>
+</body>
+</html>

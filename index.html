@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferretería Super Jimmy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ─── NUEVOS ESTILOS (no modifican los existentes) ──────── */
+
+/* Servicio card — cursor pointer + indicador */
+.servicio-card { cursor:pointer; position:relative; }
+.servicio-card .ver-mas {
+  display:inline-block; margin-top:10px; font-size:12px;
+  color:var(--rojo); font-weight:800; text-transform:uppercase; letter-spacing:.5px;
+}
+
+/* Modal de servicios */
+.svc-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.65);
+  z-index:300; display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.svc-modal-overlay.open { display:flex; }
+.svc-modal {
+  background:white; border-radius:14px; padding:40px;
+  width:100%; max-width:500px; margin:20px;
+  animation:slideUp .3s ease; position:relative;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+.svc-modal-close {
+  position:absolute; top:14px; right:18px;
+  background:none; border:none; font-size:24px; cursor:pointer; color:#aaa;
+  transition:color .2s;
+}
+.svc-modal-close:hover { color:var(--rojo); }
+.svc-modal-icon { font-size:48px; margin-bottom:14px; }
+.svc-modal h3 {
+  font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px;
+  margin-bottom:10px; color:#111;
+}
+.svc-modal p { font-size:14px; color:#555; line-height:1.8; margin-bottom:8px; }
+.svc-modal ul { list-style:none; margin-top:12px; }
+.svc-modal ul li { font-size:14px; color:#444; padding:6px 0;
+  border-bottom:1px solid #f0f0f0; display:flex; gap:8px; }
+.svc-modal ul li::before { content:'✓'; color:var(--rojo); font-weight:800; }
+
+/* Consejo card — cursor pointer */
+.consejo-card { cursor:pointer; }
+.consejo-card .consejo-body .consejo-arrow {
+  display:block; margin-top:8px; font-size:12px; color:var(--rojo);
+  font-weight:800; text-transform:uppercase; letter-spacing:.5px;
+}
+
+/* Modal de consejos / tutoriales */
+.consejo-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.65);
+  z-index:300; display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.consejo-modal-overlay.open { display:flex; }
+.consejo-modal {
+  background:white; border-radius:14px; padding:40px;
+  width:100%; max-width:540px; margin:20px; max-height:85vh; overflow-y:auto;
+  animation:slideUp .3s ease; position:relative;
+}
+.consejo-modal-close {
+  position:absolute; top:14px; right:18px;
+  background:none; border:none; font-size:24px; cursor:pointer; color:#aaa;
+  transition:color .2s;
+}
+.consejo-modal-close:hover { color:var(--rojo); }
+.consejo-modal .consejo-modal-cat {
+  font-size:11px; color:var(--rojo); font-weight:800;
+  text-transform:uppercase; letter-spacing:2px; margin-bottom:8px; display:block;
+}
+.consejo-modal h3 {
+  font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:1px;
+  margin-bottom:16px; color:#111;
+}
+.consejo-modal .paso {
+  display:flex; gap:14px; margin-bottom:18px; align-items:flex-start;
+}
+.consejo-modal .paso-num {
+  width:28px; height:28px; background:var(--rojo); color:white;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800; flex-shrink:0;
+}
+.consejo-modal .paso-texto { font-size:14px; color:#555; line-height:1.7; }
+
+/* Acceso admin oculto */
+.admin-trigger {
+  position:fixed; bottom:28px; left:28px;
+  width:20px; height:20px;
+  background:transparent; border:none; cursor:pointer;
+  z-index:990; opacity:0.01; /* casi invisible */
+  transition:opacity .3s;
+}
+.admin-trigger:hover { opacity:0.15; }
+
+/* Modal login admin desde index */
+.admin-login-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.8);
+  z-index:9999; display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(6px);
+}
+.admin-login-overlay.open { display:flex; }
+.admin-login-box {
+  background:white; border-radius:14px; padding:40px;
+  width:100%; max-width:360px; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.admin-login-box .lock { font-size:40px; margin-bottom:12px; }
+.admin-login-box h3 {
+  font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:1px; margin-bottom:6px;
+}
+.admin-login-box p { font-size:13px; color:#888; margin-bottom:20px; }
+.admin-login-box input {
+  width:100%; padding:11px 14px; border:2px solid #e0e0e0;
+  border-radius:8px; font-family:'Nunito',sans-serif; font-size:14px;
+  outline:none; transition:border-color .2s; margin-bottom:12px;
+}
+.admin-login-box input:focus { border-color:var(--rojo); }
+.admin-login-box button {
+  width:100%; background:var(--rojo); color:white; border:none;
+  padding:12px; border-radius:8px; font-family:'Nunito',sans-serif;
+  font-size:14px; font-weight:800; cursor:pointer; transition:background .2s;
+}
+.admin-login-box button:hover { background:#c00; }
+.admin-login-box .err { color:var(--rojo); font-size:13px; display:none; margin-top:8px; }
+.admin-login-box .cancel { display:block; margin-top:10px; font-size:13px; color:#aaa; cursor:pointer; }
+.admin-login-box .cancel:hover { color:#555; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <img class="logo" src="Captura de pantalla 2026-05-15 121012.png">
+  <ul class="nav-links">
+    <li><a href="#categorias">Productos</a></li>
+    <li><a href="#ofertas">Ofertas</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#consejos">Consejos</a></li>
+    <li><a href="#vacantes">Vacantes</a></li>
+    <li><a href="#ayuda">Ayuda</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Tu aliado</div>
+    <h1>FERRETERIA<br><em>JIMMY</em></h1>
+    <p>Pinturas, plomería, materiales de construcción, electrodomésticos y más. Calidad garantizada al mejor precio.</p>
+    <div class="hero-btns">
+      <a href="#categorias" class="btn-primary">Ver Catálogo</a>
+      <a href="#ofertas" class="btn-outline">Ver Ofertas</a>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORÍAS — ahora con links a productos.html?cat=X -->
+<section id="categorias">
+  <div class="section-header">
+    <div class="tag">Nuestro catálogo</div>
+    <h2 id="categoriauwu">COMPRA POR CATEGORÍA</h2>
+  </div>
+  <div class="categories">
+    <a href="productos.html?cat=Pinturas" class="cat-card"><span class="cat-icon">🎨</span><div class="cat-name">Pinturas</div><div class="cat-count">+711 productos</div></a>
+    <a href="productos.html?cat=Plomería" class="cat-card"><span class="cat-icon">🚿</span><div class="cat-name">Plomería</div><div class="cat-count">+1,452 productos</div></a>
+    <a href="productos.html?cat=Electricidad" class="cat-card"><span class="cat-icon">⚡</span><div class="cat-name">Electricidad</div><div class="cat-count">+861 productos</div></a>
+    <a href="productos.html?cat=Herramientas" class="cat-card"><span class="cat-icon">🔧</span><div class="cat-name">Herramientas</div><div class="cat-count">+1,165 productos</div></a>
+    <a href="productos.html?cat=Construcción" class="cat-card"><span class="cat-icon">🧱</span><div class="cat-name">Construcción</div><div class="cat-count">+374 productos</div></a>
+    <a href="productos.html?cat=Cerrajería" class="cat-card"><span class="cat-icon">🔐</span><div class="cat-name">Cerrajería</div><div class="cat-count">+544 productos</div></a>
+    <a href="productos.html?cat=Automotriz" class="cat-card"><span class="cat-icon">🚗</span><div class="cat-name">Automotriz</div><div class="cat-count">+125 productos</div></a>
+    <a href="productos.html?cat=Electrodomésticos" class="cat-card"><span class="cat-icon">📺</span><div class="cat-name">Electrodomésticos</div><div class="cat-count">+100 productos</div></a>
+    <a href="productos.html?cat=General" class="cat-card"><span class="cat-icon">📦</span><div class="cat-name">General</div><div class="cat-count">+4,006 productos</div></a>
+  </div>
+</section>
+
+<!-- OFERTAS -->
+<section id="ofertas" class="ofertas-section">
+  <div class="section-header">
+    <div class="tag" style="color:#000000">Descuentos activos</div>
+    <h2>OFERTAS DE LA SEMANA</h2>
+  </div>
+  <div class="ofertas-grid" id="ofertas-grid">
+    <!-- Se carga dinámicamente desde la API -->
+    <div class="oferta-card">
+      <div class="oferta-img">🎨<span class="badge-oferta">-30%</span></div>
+      <div class="oferta-body">
+        <div class="oferta-nombre">Pintura Interior Blanca 1 Galón</div>
+        <div class="oferta-desc">Marca Premium · Alta cobertura</div>
+        <div class="oferta-precios">
+          <span class="precio-nuevo">RD$850</span>
+          <span class="precio-viejo">RD$1,200</span>
+        </div>
+      </div>
+    </div>
+    <div class="oferta-card">
+      <div class="oferta-img">🔌<span class="badge-oferta">-25%</span></div>
+      <div class="oferta-body">
+        <div class="oferta-nombre">Cable Eléctrico 12 AWG (Rollo)</div>
+        <div class="oferta-desc">100m · Certificado</div>
+        <div class="oferta-precios">
+          <span class="precio-nuevo">RD$1,500</span>
+          <span class="precio-viejo">RD$2,000</span>
+        </div>
+      </div>
+    </div>
+    <div class="oferta-card">
+      <div class="oferta-img">🚿<span class="badge-oferta">-20%</span></div>
+      <div class="oferta-body">
+        <div class="oferta-nombre">Set de Plomería Completo</div>
+        <div class="oferta-desc">Tuberías PVC + accesorios</div>
+        <div class="oferta-precios">
+          <span class="precio-nuevo">RD$2,400</span>
+          <span class="precio-viejo">RD$3,000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS — con modal al hacer click -->
+<section id="servicios" class="servicios-section">
+  <div class="section-header">
+    <div class="tag">Lo que ofrecemos</div>
+    <h2>NUESTROS SERVICIOS</h2>
+  </div>
+  <div class="servicios-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 680px;">
+    <div class="servicio-card" onclick="abrirServicio('entrega')">
+      <div class="servicio-icon">🚚</div><h3>Entrega a Domicilio</h3>
+      <p>Llevamos tus pedidos hasta donde estés. Entrega rápida en toda la zona.</p>
+      <span class="ver-mas">Ver más →</span>
+    </div>
+    <div class="servicio-card" onclick="abrirServicio('cotizacion')">
+      <div class="servicio-icon">📋</div><h3>Cotizaciones</h3>
+      <p>Solicita tu cotización personalizada para proyectos de construcción y remodelación.</p>
+      <span class="ver-mas">Ver más →</span>
+    </div>
+  </div>
+</section>
+
+<!-- MISIÓN / VISIÓN / VALORES -->
+<section class="mision-section">
+  <div class="section-header">
+    <div class="tag">Quiénes somos</div>
+    <h2>MISIÓN, VISIÓN Y VALORES</h2>
+  </div>
+  <div class="mision-grid">
+    <div class="mision-card"><h3>🎯 Misión</h3><p>Ofrecer soluciones completas en productos de ferretería, plomería, electricidad, materiales de construcción, pintura y cerrajería, brindando calidad, buenos precios y una atención confiable que ayude a nuestros clientes a desarrollar sus proyectos de manera segura y eficiente.</p></div>
+    <div class="mision-card"><h3>🔭 Visión</h3><p>Ser la ferretería de mayor confianza y preferencia en nuestra comunidad, destacándonos por la variedad de productos, excelencia en el servicio y compromiso con el crecimiento de nuestros clientes y colaboradores.</p></div>
+    <div class="mision-card"><h3>💡 Valores</h3><p>Compromiso · Honestidad · Calidad · Atención al Cliente · Trabajo en Equipo · Responsabilidad</p></div>
+  </div>
+</section>
+
+<!-- CONSEJOS — con modal al hacer click -->
+<section id="consejos" class="consejos-section">
+  <div class="section-header">
+    <div class="tag">Blog</div>
+    <h2>CONSEJOS Y TUTORIALES</h2>
+  </div>
+  <div class="consejos-grid">
+    <div class="consejo-card" onclick="abrirConsejo('pintura')">
+      <div class="consejo-img">🎨</div>
+      <div class="consejo-body">
+        <div class="consejo-cat">Pintura</div>
+        <div class="consejo-title">Cómo preparar una pared antes de pintar</div>
+        <span class="consejo-arrow">Leer guía →</span>
+      </div>
+    </div>
+    <div class="consejo-card" onclick="abrirConsejo('plomeria')">
+      <div class="consejo-img">🚿</div>
+      <div class="consejo-body">
+        <div class="consejo-cat">Plomería</div>
+        <div class="consejo-title">Cómo detectar y reparar una fuga de agua en casa</div>
+        <span class="consejo-arrow">Leer guía →</span>
+      </div>
+    </div>
+    <div class="consejo-card" onclick="abrirConsejo('electricidad')">
+      <div class="consejo-img">⚡</div>
+      <div class="consejo-body">
+        <div class="consejo-cat">Electricidad</div>
+        <div class="consejo-title">Guía básica para instalar tomacorrientes</div>
+        <span class="consejo-arrow">Leer guía →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VACANTES -->
+<section id="vacantes" class="vacantes-section">
+  <div class="section-header">
+    <div class="tag" style="color:#000000">Únete al equipo</div>
+    <h2>VACANTES DISPONIBLES</h2>
+  </div>
+  <div class="vacantes-list">
+    <div class="vacante-item"><div class="vacante-info"><h4>Área de Caja</h4><span>Tiempo completo · Presencial</span></div><a href="vacantes.html" class="vacante-tag">Aplicar ›</a></div>
+    <div class="vacante-item"><div class="vacante-info"><h4>Área de Ventas</h4><span>Tiempo completo · Presencial</span></div><a href="vacantes.html" class="vacante-tag">Aplicar ›</a></div>
+    <div class="vacante-item"><div class="vacante-info"><h4>Chofer</h4><span>Tiempo completo · Presencial</span></div><a href="vacantes.html" class="vacante-tag">Aplicar ›</a></div>
+  </div>
+</section>
+
+<!-- CENTRO DE AYUDA — acordeón interactivo (JS añadido abajo) -->
+<section id="ayuda" class="ayuda-section">
+  <div class="section-header">
+    <div class="tag">Soporte</div>
+    <h2>CENTRO DE AYUDA</h2>
+  </div>
+  <div class="faqs">
+    <div class="faq-item">
+      <div class="faq-q">¿Pueden hacer cotizaciones? <span>+</span></div>
+      <div class="faq-a">Sí, ofrecemos cotizaciones sin costo para cualquier proyecto. Contáctanos por WhatsApp al 829-824-0117 o escríbenos a contabilidadjimmy06@gmail.com y te respondemos a la brevedad.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Aceptan tarjetas de crédito/débito? <span>+</span></div>
+      <div class="faq-a">Sí, aceptamos tarjetas de crédito y débito de los principales bancos, además de efectivo. Visítanos en tienda para más información sobre métodos de pago disponibles.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Pueden conseguir materiales específicos? <span>+</span></div>
+      <div class="faq-a">Contamos con una amplia variedad de materiales en plomería, electricidad, construcción, pintura, cerrajería y herramientas. Si buscas algo específico, contáctanos y con gusto te orientamos sobre disponibilidad.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Pueden recomendar o conseguir un plomero? <span>+</span></div>
+      <div class="faq-a">Sí, podemos orientarte. Contáctanos por WhatsApp al 829-824-0117 y te ayudamos a conseguir el técnico que necesitas para tu proyecto.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">¿Emiten facturas con comprobante fiscal y gubernamental? <span>+</span></div>
+      <div class="faq-a">Sí, emitimos facturas con comprobante fiscal y gubernamental. Indícalo al momento de tu compra y con gusto te lo gestionamos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO + MAPA -->
+<section id="contacto" class="contacto-section">
+  <div class="section-header">
+    <div class="tag">Encuéntranos</div>
+    <h2>CONTACTO Y UBICACIÓN</h2>
+  </div>
+  <div class="contacto-grid">
+    <div class="mapa-placeholder" style="padding:0;overflow:hidden;border-radius:12px;min-height:320px;">
+      <iframe
+        src="https://maps.google.com/maps?q=Jimmy+Moda+Prolongacion+Avenida+27+de+Febrero+496+Ivan+Guzman+Klang+Santo+Domingo&t=&z=17&ie=UTF8&iwloc=&output=embed"
+        width="100%" height="320" style="border:0;display:block;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="contacto-info">
+      <h3>INFORMACIÓN DE CONTACTO</h3>
+      <div class="contacto-item"><div class="ci-icon">📍</div><div class="ci-text"><strong>Dirección</strong><span>Prolongación Avenida 27 de Febrero #496, Iván Guzmán Klang, Santo Domingo, R.D.</span></div></div>
+      <div class="contacto-item"><div class="ci-icon">📞</div><div class="ci-text"><strong>Teléfono</strong><span>829-824-0117</span></div></div>
+      <div class="contacto-item"><div class="ci-icon">💬</div><div class="ci-text"><strong>WhatsApp</strong><span><a href="https://wa.me/18298240117" target="_blank" style="color:inherit">829-824-0117</a></span></div></div>
+      <div class="contacto-item"><div class="ci-icon">📸</div><div class="ci-text"><strong>Instagram</strong><span><a href="https://www.instagram.com/ferreteriasuperjimmy/" target="_blank" style="color:inherit">@ferreteriasuperjimmy</a></span></div></div>
+      <div class="contacto-item"><div class="ci-icon">✉️</div><div class="ci-text"><strong>Correo electrónico</strong><span><a href="mailto:contabilidadjimmy06@gmail.com" style="color:inherit">contabilidadjimmy06@gmail.com</a></span></div></div>
+      <div class="horarios">
+        <strong>🕐 Horarios de Atención</strong>
+        <p>Lunes – Viernes: 8:00 AM – 6:00 PM<br>Sábado: 8:00 AM – 5:00 PM<br>Domingo: 8:00 AM – 12:00 PM</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="logo-text">SUPER <span style="color:var(--rojo)">JIMMY</span></span>
+      <p>Tu ferretería de confianza. Más de 15 años proveyendo materiales y herramientas de calidad.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <a href="#">Inicio</a><a href="#">Productos</a><a href="#">Ofertas</a><a href="#">Servicios</a><a href="#">Consejos</a>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <a href="#">Quiénes somos</a><a href="#">Misión y Visión</a><a href="vacantes.html">Vacantes</a><a href="#">Centro de Ayuda</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <a href="#">WhatsApp</a><a href="#">Correo electrónico</a><a href="#">Ubicación</a><a href="#">Horarios</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ferretería Super Jimmy. Todos los derechos reservados.</span>
+    <span>Diseño: Estudiantes Politecnico Madre Rafaela Ybarra</span>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOTANTE -->
+<a href="https://wa.me/18298240117" class="float-wa" target="_blank">💬</a>
+
+<!-- ACCESO ADMIN OCULTO (esquina inferior izquierda, casi invisible) -->
+<button class="admin-trigger" onclick="document.getElementById('admin-login-overlay').classList.add('open')" title=""></button>
+
+<!-- MODAL LOGIN ADMIN -->
+<div class="admin-login-overlay" id="admin-login-overlay">
+  <div class="admin-login-box">
+    <div class="lock">🔐</div>
+    <h3>Acceso Administrativo</h3>
+    <p>Área restringida al personal autorizado</p>
+    <input type="password" id="admin-pwd" placeholder="Contraseña de administrador"
+      onkeydown="if(event.key==='Enter')loginAdmin()">
+    <button onclick="loginAdmin()">Entrar al panel →</button>
+    <div class="err" id="admin-err">Contraseña incorrecta</div>
+    <span class="cancel" onclick="document.getElementById('admin-login-overlay').classList.remove('open')">Cancelar</span>
+  </div>
+</div>
+
+<!-- MODAL SERVICIOS -->
+<div class="svc-modal-overlay" id="svc-modal">
+  <div class="svc-modal">
+    <button class="svc-modal-close" onclick="cerrarSvc()">×</button>
+    <div class="svc-modal-icon" id="svc-icon"></div>
+    <h3 id="svc-titulo"></h3>
+    <div id="svc-contenido"></div>
+  </div>
+</div>
+
+<!-- MODAL CONSEJOS -->
+<div class="consejo-modal-overlay" id="consejo-modal">
+  <div class="consejo-modal">
+    <button class="consejo-modal-close" onclick="cerrarConsejo()">×</button>
+    <span class="consejo-modal-cat" id="c-cat"></span>
+    <h3 id="c-titulo"></h3>
+    <div id="c-pasos"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+/* ─── ACORDEÓN FAQ ──────────────────────────────────────── */
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    // Cierra todos
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    // Abre el actual si estaba cerrado
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ─── LOGIN ADMIN ───────────────────────────────────────── */
+async function loginAdmin() {
+  const pwd = document.getElementById('admin-pwd').value;
+  const res = await fetch('/api/admin/login', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({password: pwd})
+  });
+  if (res.ok) {
+    window.location.href = 'admin.html';
+  } else {
+    document.getElementById('admin-err').style.display = 'block';
+    document.getElementById('admin-pwd').value = '';
+  }
+}
+document.getElementById('admin-login-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+/* ─── DATOS DE SERVICIOS ────────────────────────────────── */
+const servicios = {
+  entrega: {
+    icon:'🚚', titulo:'Entrega a Domicilio',
+    desc:'Llevamos tus productos directamente a tu hogar o negocio de manera rápida y segura. Cubrimos toda el área metropolitana y zonas aledañas.',
+    items:['Entrega el mismo día para pedidos antes del mediodía','Seguimiento de tu pedido en tiempo real','Embalaje seguro para materiales frágiles','Descarga incluida para pedidos mayores a RD$5,000','Servicio disponible de lunes a sábado']
+  },
+  instalacion: {
+    icon:'🔩', titulo:'Servicio de Instalación',
+    desc:'Nuestros técnicos certificados realizan instalaciones eléctricas y de plomería con garantía de trabajo. No te compliques — nosotros lo hacemos por ti.',
+    items:['Técnicos certificados con años de experiencia','Instalaciones eléctricas residenciales y comerciales','Instalaciones de plomería y sistemas hidráulicos','Garantía de 6 meses en mano de obra','Presupuesto sin costo previo a la instalación']
+  },
+  cotizacion: {
+    icon:'📋', titulo:'Cotizaciones sin Costo',
+    desc:'¿Tienes un proyecto de construcción o remodelación? Nuestro equipo te prepara una cotización detallada y personalizada completamente gratis.',
+    items:['Cotización detallada por material','Asesoría técnica incluida','Respuesta en menos de 24 horas','Válida por 15 días desde su emisión','Posibilidad de ajustar según tu presupuesto']
+  },
+  alquiler: {
+    icon:'🔨', titulo:'Alquiler de Herramientas',
+    desc:'Accede a herramientas profesionales sin necesidad de comprarlas. Ahorra dinero en tu proyecto con nuestro servicio de alquiler flexible.',
+    items:['Taladros, pulidoras, sierras y más','Alquiler por día, semana o mes','Herramientas revisadas y limpias','Depósito reembolsable al devolver','Instrucciones de uso incluidas']
+  },
+  atencion: {
+    icon:'🏪', titulo:'Atención Personalizada',
+    desc:'Nuestro equipo de asesores está listo para ayudarte a encontrar exactamente lo que necesitas para tu proyecto, sin importar el tamaño.',
+    items:['Asesoría en tienda sin compromiso','Cálculo de materiales para tu proyecto','Recomendación de productos según tu presupuesto','Apoyo post-venta para dudas técnicas','Atención por WhatsApp para consultas rápidas']
+  },
+  financiamiento: {
+    icon:'💳', titulo:'Planes de Financiamiento',
+    desc:'No dejes que el presupuesto detenga tu proyecto. Ofrecemos planes de pago flexibles para que puedas comprar hoy y pagar a tu ritmo.',
+    items:['Plazos de 3, 6 y 12 meses disponibles','Aprobación rápida en tienda','Sin tarjeta de crédito bancaria necesaria','Cuotas fijas sin sorpresas','Consulta requisitos con nuestro equipo']
+  }
+};
+
+function abrirServicio(key) {
+  const s = servicios[key];
+  document.getElementById('svc-icon').textContent = s.icon;
+  document.getElementById('svc-titulo').textContent = s.titulo;
+  document.getElementById('svc-contenido').innerHTML =
+    `<p>${s.desc}</p><ul>${s.items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+  document.getElementById('svc-modal').classList.add('open');
+}
+function cerrarSvc() { document.getElementById('svc-modal').classList.remove('open'); }
+document.getElementById('svc-modal').addEventListener('click', e => {
+  if(e.target===e.currentTarget) cerrarSvc();
+});
+
+/* ─── DATOS DE CONSEJOS ─────────────────────────────────── */
+const consejos = {
+  pintura: {
+    cat:'Pintura', titulo:'Cómo preparar una pared antes de pintar',
+    pasos:[
+      {t:'Limpia la superficie', d:'Elimina polvo, suciedad y grasa con agua y jabón. Deja secar completamente (mínimo 2 horas).'},
+      {t:'Repara grietas y hoyos', d:'Usa masilla o cemento blanco para tapar imperfecciones. Lija cuando esté seco.'},
+      {t:'Lija la pared', d:'Pasa una lija de grano medio para que la pintura agarre mejor. Elimina el polvo con un trapo húmedo.'},
+      {t:'Aplica sellador o base', d:'El sellador evita manchas y mejora la adherencia de la pintura final. Deja secar 1-2 horas.'},
+      {t:'Aplica la pintura', d:'Da dos manos de pintura, esperando que la primera seque antes de la segunda. ¡Listo!'},
+    ]
+  },
+  plomeria: {
+    cat:'Plomería', titulo:'Cómo detectar y reparar una fuga de agua en casa',
+    pasos:[
+      {t:'Identifica la fuga', d:'Busca manchas de humedad, goteo visible o aumento inexplicable en tu factura de agua.'},
+      {t:'Cierra la llave de paso', d:'Cierra el agua principal de tu hogar antes de intentar cualquier reparación.'},
+      {t:'Localiza el punto exacto', d:'Seca la tubería con un trapo y observa dónde aparece la humedad nuevamente.'},
+      {t:'Aplica cinta de teflón o pegamento PVC', d:'Para uniones roscadas usa teflón. Para tuberías PVC, usa pegamento especial para PVC.'},
+      {t:'Prueba y verifica', d:'Abre la llave de paso lentamente y verifica que no haya fugas. Si persiste, llama a un técnico.'},
+    ]
+  },
+  electricidad: {
+    cat:'Electricidad', titulo:'Guía básica para instalar tomacorrientes',
+    pasos:[
+      {t:'⚠️ Corta la corriente', d:'Ve al tablero eléctrico y apaga el breaker del circuito donde vas a trabajar. Verifica con un tester.'},
+      {t:'Retira el tomacorriente viejo', d:'Destornilla la placa y el tomacorriente. Anota o fotografia los cables antes de desconectarlos.'},
+      {t:'Identifica los cables', d:'Negro o rojo = fase (hot). Blanco = neutro. Verde o descubierto = tierra.'},
+      {t:'Conecta el nuevo tomacorriente', d:'Fase al tornillo dorado, neutro al tornillo plateado, tierra al tornillo verde.'},
+      {t:'Prueba con cuidado', d:'Restaura el breaker y prueba con un aparato pequeño. Si no funciona, revisa las conexiones.'},
+    ]
+  }
+};
+
+function abrirConsejo(key) {
+  const c = consejos[key];
+  document.getElementById('c-cat').textContent = c.cat;
+  document.getElementById('c-titulo').textContent = c.titulo;
+  document.getElementById('c-pasos').innerHTML = c.pasos.map((p,i) =>
+    `<div class="paso">
+      <div class="paso-num">${i+1}</div>
+      <div class="paso-texto"><strong>${p.t}</strong><br>${p.d}</div>
+    </div>`
+  ).join('');
+  document.getElementById('consejo-modal').classList.add('open');
+}
+function cerrarConsejo() { document.getElementById('consejo-modal').classList.remove('open'); }
+document.getElementById('consejo-modal').addEventListener('click', e => {
+  if(e.target===e.currentTarget) cerrarConsejo();
+});
+
+/* ─── CARGAR OFERTAS DINÁMICAS (desde API) ──────────────── */
+const catIconos = {'Pinturas':'🎨','Muebles':'🪑','Cerámicas':'🪟','Plomería':'🚿',
+  'Construcción':'🧱','Electricidad':'⚡','Electrodomésticos':'📺','Herramientas':'🔧'};
+
+async function cargarOfertas() {
+  try {
+    const res = await fetch('/api/productos?oferta=1');
+    const prods = await res.json();
+    if (!prods.length) return; // mantener las estáticas si no hay API
+    const grid = document.getElementById('ofertas-grid');
+    grid.innerHTML = prods.slice(0,3).map(p => {
+      const desc = p.precio_oferta ? Math.round((1-p.precio_oferta/p.precio)*100) : 0;
+      const icon = p.imagen
+        ? `<img src="/uploads_productos/${p.imagen}" style="width:100%;height:100%;object-fit:cover">`
+        : (catIconos[p.categoria]||'📦');
+      return `<div class="oferta-card">
+        <div class="oferta-img">${icon}<span class="badge-oferta">-${desc}%</span></div>
+        <div class="oferta-body">
+          <div class="oferta-nombre">${p.nombre}</div>
+          <div class="oferta-desc">${p.marca||p.categoria}</div>
+          <div class="oferta-precios">
+            <span class="precio-nuevo">RD$${(p.precio_oferta||p.precio).toLocaleString()}</span>
+            <span class="precio-viejo">RD$${p.precio.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { /* mantener las estáticas */ }
+}
+cargarOfertas();
+</script>
+</body>
+</html>

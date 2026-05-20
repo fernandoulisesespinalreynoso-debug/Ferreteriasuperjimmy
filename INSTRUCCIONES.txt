@@ -1,0 +1,33 @@
+SUPER JIMMY — ADMIN INTEGRADO CON CLAVE HASHEADA
+
+Clave actual para entrar: jimmy2026
+
+Cómo funciona:
+1. Abre /productos.
+2. Escribe jimmy2026 en la barra de búsqueda.
+3. Presiona ENTER.
+4. El sistema valida la clave en Flask usando hash y abre /admin/productos.
+
+También puedes entrar directo por:
+/admin
+/admin/productos
+
+Qué incluye el admin:
+- Crear productos.
+- Editar productos.
+- Subir/cambiar imágenes.
+- Editar precios.
+- Activar ofertas y precios de oferta.
+- Eliminar/desactivar productos.
+- Gestionar vacantes y aplicaciones.
+
+Importante:
+- Sustituye tus archivos actuales por los incluidos en este paquete.
+- Mantén la misma estructura de carpetas.
+- Ejecuta: python app.py
+- Abre: http://127.0.0.1:5000/productos
+
+Seguridad:
+- La clave no está expuesta en productos.html.
+- En app.py se guarda como hash: ADMIN_PASSWORD_HASH.
+- Para producción, coloca la variable ADMIN_PASSWORD_HASH en Render/hosting.
